@@ -161,8 +161,8 @@
     /* ---- transform effects ---- */
     let scale = 1, tx = 0, ty = 0, rot = cue.rot || 0;
     if (cue.grow) scale *= cue.grow[0] + (cue.grow[1] - cue.grow[0]) * ease(k, cue.easing);
-    if (cue.fx === "fall")  { ty = 8 + 120 * k * k; rot += (cue.spin || 8) * k; }
-    if (cue.fx === "sink")  { ty = 120 * ease(k, "in"); }
+    if (cue.fx === "fallLine") { ty = 116 * k; }            // linear fall through the frame
+    if (cue.fx === "sink")  { ty = 14 * ease(k, "in"); }    // slips below the bottom edge
     if (cue.fx === "slide") { tx = 130 * ease(k, "in"); }
     if (cue.rise && localT < (cue.dur || 0.3)) ty += (1 - localT / (cue.dur || 0.3)) * -6;
     if (cue.driftX) tx += cue.driftX * k;
@@ -198,10 +198,11 @@
     const full = cue.text;
     cue.fxOpacity = 1;
     if (cue.fx === "type") {
-      // reveal char-by-char over typeDur (default: whole life minus a tail)
+      // reveal char-by-char over typeDur; reverseType reveals from the END ("…feet" → "down to my feet")
       const dur = cue.typeDur != null ? cue.typeDur : life * 0.62;
       const n = Math.min(full.length, Math.floor(full.length * Math.min(1, localT / dur) + 0.0001));
-      setTyped(el, full.slice(0, n), n < full.length && !cue.noCaret);
+      const txt = cue.reverseType ? full.slice(full.length - n) : full.slice(0, n);
+      setTyped(el, txt, n < full.length && !cue.noCaret);
     } else if (cue.fx === "typeloop") {
       // type to the end, then endlessly delete back to loopTo and retype (can never finish)
       const cps = cue.cps || 13;                       // chars per second
@@ -378,34 +379,35 @@
   function onNo(e) { if (e) e.stopPropagation(); /* it deletes anyway — No does nothing */ }
   function onYes(e) { if (e) e.stopPropagation(); startTerminal(); }
 
-  /* the fake terminal: deletes the songs, then us */
+  /* the old Mac terminal: deletes the songs, then us */
   const TERMINAL_SCRIPT = [
-    { txt: "C:\\clayandkelsy\\discography> del /f /s *.wav", cls: "" , wait: 500 },
-    { txt: "", wait: 120 },
-    { txt: "Deleting  moo-osc-demo.wav ............ done", cls: "ln-dim", wait: 220 },
-    { txt: "Deleting  i-am.wav ................... done", cls: "ln-dim", wait: 240 },
-    { txt: "Deleting  i-miss-you.wav ............. done", cls: "ln-dim", wait: 240 },
-    { txt: "Deleting  the-osc-collection.wav ..... done", cls: "ln-dim", wait: 240 },
-    { txt: "Deleting  memories-of-me.wav ........ ", cls: "", wait: 900, nonl: true },
-    { txt: "ERROR: file is currently playing.", cls: "ln-err", wait: 700 },
-    { txt: "  force delete anyway? (Y/n) Y", cls: "ln-warn", wait: 800 },
-    { txt: "Deleting  memories-of-me.wav ........ done", cls: "ln-dim", wait: 500 },
+    { txt: "Last login: Tue Jul 15 20:14:08 on ttys000", cls: "ln-dim", wait: 650 },
+    { txt: "clayandkelsy % rm -rf ~/discography", cls: "", wait: 620 },
+    { txt: "removing  moo-osc-demo.wav ............ gone", cls: "ln-dim", wait: 260 },
+    { txt: "removing  i-am.wav .................... gone", cls: "ln-dim", wait: 260 },
+    { txt: "removing  i-miss-you.wav .............. gone", cls: "ln-dim", wait: 260 },
+    { txt: "removing  the-osc-collection.wav ...... gone", cls: "ln-dim", wait: 280 },
+    { txt: "removing  memories-of-me.wav ....... ", cls: "", wait: 950, nonl: true },
+    { txt: "", wait: 100 },
+    { txt: "rm: memories-of-me.wav: file is in use — it is playing right now", cls: "ln-err", wait: 850 },
+    { txt: "  force remove? (y/n) y", cls: "ln-warn", wait: 800 },
+    { txt: "removing  memories-of-me.wav .......... gone", cls: "ln-dim", wait: 550 },
+    { txt: "", wait: 320 },
+    { txt: "clayandkelsy % rm kelsy", cls: "", wait: 680 },
+    { txt: "removing  kelsy ....................... gone", cls: "ln-dim", wait: 700 },
+    { txt: "clayandkelsy % rm clay", cls: "", wait: 680 },
+    { txt: "removing  clay ........................ gone", cls: "ln-dim", wait: 780 },
     { txt: "", wait: 300 },
-    { txt: "C:\\clayandkelsy> del /f kelsy", cls: "", wait: 700 },
-    { txt: "Deleting  kelsy ...................... done", cls: "ln-dim", wait: 700 },
-    { txt: "C:\\clayandkelsy> del /f clay", cls: "", wait: 700 },
-    { txt: "Deleting  clay ....................... done", cls: "ln-dim", wait: 800 },
-    { txt: "", wait: 300 },
-    { txt: "C:\\> del /f us", cls: "", wait: 900 },
-    { txt: "ERROR: 'us' is in memory and cannot be removed.", cls: "ln-err", wait: 1000 },
-    { txt: "  retrying", cls: "ln-warn", wait: 400, nonl: true },
-    { txt: " .", cls: "ln-warn", wait: 500, nonl: true },
-    { txt: " .", cls: "ln-warn", wait: 500, nonl: true },
+    { txt: "clayandkelsy % rm us", cls: "", wait: 900 },
+    { txt: "rm: us: operation not permitted — memory in use", cls: "ln-err", wait: 950 },
+    { txt: "  retrying", cls: "ln-warn", wait: 420, nonl: true },
+    { txt: " .", cls: "ln-warn", wait: 520, nonl: true },
+    { txt: " .", cls: "ln-warn", wait: 520, nonl: true },
     { txt: " .", cls: "ln-warn", wait: 700, nonl: true },
     { txt: "", wait: 200 },
-    { txt: "Deleting  us ......................... done", cls: "ln-dim", wait: 1400 },
-    { txt: "", wait: 500 },
-    { txt: "nothing else. but my defeat.", cls: "ln-ok", wait: 2200 },
+    { txt: "removing  us .......................... gone", cls: "ln-dim", wait: 1400 },
+    { txt: "", wait: 480 },
+    { txt: "nothing else. but my defeat.", cls: "ln-ok", wait: 2100 },
   ];
   let terminalTimer = null;
   function startTerminal() {
@@ -418,32 +420,23 @@
     document.body.classList.remove("xp-cursor");
 
     const term = document.createElement("div");
-    term.className = "terminal is-crt";
-    const out = document.createElement("div");
-    out.className = "terminal__out";
-    term.appendChild(out);
+    term.className = "terminal";
+    term.innerHTML =
+      '<div class="terminal__bar"><div class="terminal__close"></div><div class="terminal__title">Terminal</div></div>' +
+      '<div class="terminal__screen"><div class="terminal__out"></div></div>';
+    const out = term.querySelector(".terminal__out");
     terminalLayer.appendChild(term);
     terminalLayer.style.pointerEvents = "auto";
-    requestAnimationFrame(function () { term.classList.add("is-on"); });
+    term.classList.add("is-on");   // hard pop — this video cuts, it never fades
 
     let i = 0;
     const step = function () {
-      if (i >= TERMINAL_SCRIPT.length) {
-        // dissolve away like the video's letter-decay, then reveal the black end
-        term.classList.add("is-dissolving");
-        terminalTimer = setTimeout(function () {
-          term.remove();
-          terminalLayer.style.pointerEvents = "none";
-          endShow();
-        }, 2600);
-        return;
-      }
+      if (i >= TERMINAL_SCRIPT.length) return dissolveTerminal(term, out);
       const line = TERMINAL_SCRIPT[i];
       const span = document.createElement("span");
       if (line.cls) span.className = line.cls;
-      span.textContent = (i === 0 ? "" : "") + line.txt + (line.nonl ? "" : "\n");
+      span.textContent = line.txt + (line.nonl ? "" : "\n");
       out.appendChild(span);
-      // caret at the tail
       const oldCaret = out.querySelector(".tcaret"); if (oldCaret) oldCaret.remove();
       const caret = document.createElement("span"); caret.className = "tcaret";
       out.appendChild(caret);
@@ -451,6 +444,36 @@
       terminalTimer = setTimeout(step, line.wait || 300);
     };
     step();
+  }
+  // the phosphor text decays letter-by-letter (the video's own effect), then the window pops away
+  function dissolveTerminal(term, out) {
+    const caret = out.querySelector(".tcaret"); if (caret) caret.remove();
+    const spans = [...out.querySelectorAll("span")];
+    let ticks = 0;
+    const decay = function () {
+      let alive = 0;
+      spans.forEach(function (sp) {
+        const t = sp.textContent;
+        let o = "";
+        for (let j = 0; j < t.length; j++) {
+          const ch = t[j];
+          o += (ch === "\n" || ch === " ") ? ch : (Math.random() < 0.22 ? " " : ch);
+        }
+        sp.textContent = o;
+        if (o.trim()) alive++;
+      });
+      ticks++;
+      if (alive && ticks < 24) terminalTimer = setTimeout(decay, 110);
+      else {
+        term.classList.add("is-dissolving");
+        terminalTimer = setTimeout(function () {
+          term.remove();
+          terminalLayer.style.pointerEvents = "none";
+          endShow();
+        }, 1300);
+      }
+    };
+    terminalTimer = setTimeout(decay, 500);
   }
   function endShow() {
     running = false;
