@@ -1,0 +1,403 @@
+# memories of me — time map
+# Every visible element in the master (content-signature segmentation, 29.97fps)
+# with the cue(s) that render it. The two film passages read as (film / panel).
+
+#    src s    src e    f0    f1   rendered by
+
+   0.000    0.834     0    24   "memories of me" + "clay and kelsy"
+   0.834    1.335    25    39   "made by clay"
+   1.335    3.670    40   109   FILM:film-a.mp4
+   3.670    3.837   110   114   FILM:film-a.mp4
+   3.837    5.439   115   162   FILM:film-a.mp4
+   5.439    6.073   163   181   FILM:film-a.mp4
+   6.073    8.342   182   249   FILM:film-a.mp4
+   8.342    8.742   250   261   FILM:film-a.mp4
+   8.742   21.822   262   653   FILM:film-a.mp4
+  21.822   22.689   654   679   FILM:film-a.mp4
+  22.689   22.856   680   684   FILM:film-a.mp4
+  22.856   23.323   685   698   FILM:film-a.mp4
+  23.323   23.790   699   712   "all"
+  23.790   23.957   713   717   "around\nall"
+  23.957   24.124   718   722   "around\nall\naround"
+  24.124   24.291   723   727   "around\nall\naround"
+  24.291   24.925   728   746   "around  all  around\naround"
+  25.893   26.026   776   779   "memories of me" + "memories of me" + "memories of me"
+  26.026   26.159   780   783   "memories of me" + "memories of me" + "memories of me"
+  26.159   26.894   784   805   "memories of me" + "memories of me" + "memories of me"
+  26.894   27.060   806   810   "memories of me"
+  27.060   27.227   811   815   "memories of me"
+  28.529   28.695   855   859   "lost" [flicker] + " and found"
+  28.695   28.762   860   861   "lost" [flicker] + " and found"
+  28.762   28.996   862   868   "lost" [flicker] + " and found"
+  28.996   29.029   869   869   "lost" [flicker] + " and found"
+  29.029   29.096   870   871   "lost" [flicker] + " and found"
+  29.096   29.263   872   876   "lost" [flicker] + " and found"
+  29.263   29.596   877   886   "lost" [flicker] + " and found"
+  29.596   29.663   887   888   "lost" [flicker] + " and found"
+  29.663   29.796   889   892   "lost" [flicker] + " and found"
+  30.430   30.731   912   920   "all the pieces" [type]
+  30.731   31.031   921   929   "all the pieces" [type]
+  31.031   31.365   930   939   "all the pieces" [type]
+  31.365   31.698   940   949   "all the pieces" [type]
+  31.698   31.999   950   958   "that"
+  31.999   32.299   959   967   "that" + "that we"
+  33.634   33.934  1008  1016   "talked"
+  33.934   34.234  1017  1025   "talked"
+  34.234   34.701  1026  1039   "about"
+  35.903   36.203  1076  1084   "but"
+  36.203   36.837  1085  1103   "but didn't complete" [type]
+  36.837   37.638  1104  1127   "but didn't complete" [type]
+  38.872   39.273  1165  1176   "wish"
+  39.273   39.473  1177  1182   "me"
+  39.473   40.140  1183  1202   "well"
+  41.041   41.341  1230  1238   "cause"
+  41.341   41.642  1239  1247   "cause i"
+  41.642   41.942  1248  1256   "cause i still"
+  41.942   42.609  1257  1276   "can't see"
+  43.944   46.547  1317  1394   FILM:film-b.mp4
+  46.547   48.048  1395  1439   FILM:film-b.mp4
+  49.116   51.718  1472  1549   FILM:film-b.mp4
+  51.718   52.052  1550  1559   "nothing else" [type]
+  52.052   52.386  1560  1569   "nothing else" [type]
+  52.386   52.686  1570  1578   "nothing else" [type]
+  52.686   53.921  1579  1615   "nothing else" [type]
+  53.987   54.488  1618  1632   "but my defeat"
+  56.590   56.657  1696  1697   "NOTHING ELSE" [type] + "·"
+  56.657   56.723  1698  1699   "NOTHING ELSE" [type] + "·"
+  56.723   56.790  1700  1701   "NOTHING ELSE" [type] + "·"
+  56.790   56.857  1702  1703   "NOTHING ELSE" [type] + "·"
+  56.857   56.924  1704  1705   "NOTHING ELSE" [type] + "·"
+  56.924   56.990  1706  1707   "NOTHING ELSE" [type] + "·"
+  56.990   57.057  1708  1709   "NOT EVEN ME" [type] + "·"
+  57.057   57.124  1710  1711   "NOT EVEN ME" [type] + "·"
+  57.124   57.190  1712  1713   "NOT EVEN ME" [type] + "·"
+  57.190   57.257  1714  1715   "NOT EVEN ME" [type] + "·"
+  57.257   57.324  1716  1717   "NOT EVEN ME" [type] + "·"
+  57.324   57.391  1718  1719   "NOT EVEN ME" [type] + "·"
+  57.391   57.457  1720  1721   "NOT EVEN ME" [type] + "·"
+  57.457   57.524  1722  1723   "NOT EVEN ME" [type] + "·"
+  57.524   57.591  1724  1725   "NOT EVEN ME" [type] + "·"
+  57.591   57.658  1726  1727   "NOT EVEN ME" [type] + "·"
+  57.658   57.724  1728  1729   "NOT EVEN ME" [type] + "·"
+  57.724   57.791  1730  1731   "NOT EVEN ME" [type] + "·"
+  57.791   57.858  1732  1733   "NOT EVEN ME" [type] + "·"
+  57.858   57.925  1734  1735   "NOT EVEN ME" [type] + "·"
+  57.925   57.991  1736  1737   "NOT EVEN ME" [type] + "·"
+  57.991   58.058  1738  1739   "NOT EVEN ME" [type] + "·"
+  58.058   58.125  1740  1741   "NOT EVEN ME" [type] + "·"
+  58.125   58.191  1742  1743   "NOT EVEN ME" [type] + "·"
+  58.191   58.258  1744  1745   "NOT EVEN ME" [type] + "·"
+  58.258   58.325  1746  1747   "NOT EVEN ME" [type] + "·"
+  59.426   59.526  1781  1783   "i can't see" + "·"
+  59.526   60.160  1784  1802   "i can't see" + "·"
+  60.160   60.260  1803  1805   "i can't see"
+  61.862   62.529  1854  1873   "memories" + "memories"
+  62.529   62.829  1874  1882   "memories" [sink]
+  62.829   62.863  1883  1883   "memories" [sink]
+  62.863   62.896  1884  1884   "memories" [sink]
+  62.896   62.930  1885  1885   "memories" [sink]
+  62.930   62.963  1886  1886   "memories" [sink]
+  62.963   62.996  1887  1887   "memories" [sink]
+  62.996   63.030  1888  1888   "memories" [sink]
+  63.030   63.063  1889  1889   "memories" [sink]
+  64.197   64.598  1924  1935   "become" [type] + "so"
+  64.598   65.299  1936  1956   "become" [type] + "so"
+  65.299   65.999  1957  1977   "become" [type] + "so"
+  67.100   68.035  2011  2038   "debris" + "enemies?"
+  68.035   68.101  2039  2040   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.101   68.168  2041  2042   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.168   68.235  2043  2044   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.235   68.302  2045  2046   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.302   68.368  2047  2048   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.368   68.435  2049  2050   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  68.435   68.502  2051  2052   "debris" [sink] + "ENEMIES" [erase] + "enemies?"
+  69.503   69.803  2083  2091   "SO"
+  69.803   70.270  2092  2105   "ARE"
+  70.270   71.071  2106  2129   "WE"
+  72.039   73.173  2159  2192   "WILL YOU" + "WILL YOU STILL"
+  73.173   73.206  2193  2193   "remember me?" [slide]
+  73.206   73.340  2194  2197   "remember me?" [slide]
+  73.340   73.407  2198  2199   "remember me?" [slide]
+  73.407   73.473  2200  2201   "remember me?" [slide]
+  73.473   73.507  2202  2202   "remember me?" [slide]
+  73.507   73.573  2203  2204   "?"
+  73.573   77.311  2205  2316   FILM:film-b.mp4
+  77.311   78.845  2317  2362   FILM:film-b.mp4
+  78.845   79.146  2363  2371   FILM:film-b.mp4
+  79.146   79.313  2372  2376   FILM:film-b.mp4
+  79.313   79.346  2377  2377   FILM:film-b.mp4
+  79.346   80.881  2378  2423   FILM:film-b.mp4
+  80.881   82.382  2424  2468   FILM:film-b.mp4
+  82.382   83.984  2469  2516   FILM:film-b.mp4
+  85.352   85.385  2558  2558   "falling"
+  85.385   85.419  2559  2559   "falling"
+  85.419   85.452  2560  2560   "falling"
+  85.452   85.485  2561  2561   "falling down" + "falling down" [fall]
+  85.485   85.519  2562  2562   "falling down" + "falling down" [fall]
+  85.519   85.552  2563  2563   "falling down" + "falling down" [fall]
+  85.552   85.585  2564  2564   "falling down" + "falling down" [fall]
+  85.585   85.619  2565  2565   "falling down" + "falling down" [fall]
+  85.619   85.652  2566  2566   "falling down" + "falling down" [fall]
+  85.652   85.686  2567  2567   "falling down" + "falling down" [fall]
+  85.686   85.719  2568  2568   "falling down" + "falling down" [fall]
+  85.719   85.752  2569  2569   "falling down" + "falling down" [fall]
+  85.752   85.786  2570  2570   "falling down" + "falling down" [fall]
+  85.786   85.819  2571  2571   "falling down" + "falling down" [fall]
+  85.819   85.852  2572  2572   "falling down" + "falling down" [fall]
+  85.852   85.886  2573  2573   "falling down" + "falling down" [fall]
+  85.886   85.919  2574  2574   "falling down" + "falling down" [fall]
+  85.919   85.953  2575  2575   "falling down" + "falling down" [fall]
+  85.953   85.986  2576  2576   "falling down" + "falling down" [fall]
+  85.986   86.019  2577  2577   "falling down" + "falling down" [fall]
+  86.019   86.053  2578  2578   "falling down" + "falling down" [fall]
+  86.053   86.086  2579  2579   "falling down" + "falling down" [fall]
+  86.086   86.119  2580  2580   "falling down" + "falling down" [fall]
+  86.119   86.153  2581  2581   "falling down" + "falling down" [fall]
+  86.153   86.186  2582  2582   "falling down" + "falling down" [fall]
+  86.186   86.219  2583  2583   "falling down" + "falling down" [fall]
+  86.219   86.253  2584  2584   "falling down" + "falling down" [fall]
+  86.253   86.286  2585  2585   "falling down" + "falling down" [fall]
+  86.286   86.320  2586  2586   "falling down" + "falling down" [fall]
+  86.320   86.353  2587  2587   "falling down" + "falling down" [fall]
+  86.353   86.386  2588  2588   "falling down" + "falling down" [fall]
+  86.386   86.420  2589  2589   "falling down" + "falling down" [fall]
+  86.420   86.453  2590  2590   "falling down" + "falling down" [fall]
+  86.453   86.486  2591  2591   "falling down" + "falling down" [fall]
+  86.486   86.520  2592  2592   "falling down" + "falling down" [fall]
+  86.520   86.553  2593  2593   "falling down" + "falling down" [fall]
+  86.553   86.587  2594  2594   "falling down" + "falling down" [fall]
+  86.587   86.620  2595  2595   "falling down" + "falling down" [fall]
+  87.955   87.988  2636  2636   "feet"
+  87.988   88.021  2637  2637   "feet"
+  88.021   88.055  2638  2638   "down to my feet"
+  88.055   88.088  2639  2639   "down to my feet"
+  88.088   88.121  2640  2640   "down to my feet"
+  88.121   88.155  2641  2641   "down to my feet"
+  88.155   88.188  2642  2642   "down to my feet"
+  88.188   88.221  2643  2643   "down to my feet"
+  88.221   88.255  2644  2644   "down to my feet"
+  88.255   88.288  2645  2645   "down to my feet"
+  88.288   88.322  2646  2646   "down to my feet"
+  88.322   88.355  2647  2647   "down to my feet"
+  88.355   88.388  2648  2648   "down to my feet"
+  88.388   88.422  2649  2649   "down to my feet"
+  88.422   88.455  2650  2650   "down to my feet"
+  88.455   88.488  2651  2651   "down to my feet"
+  88.488   88.522  2652  2652   "down to my feet"
+  88.522   88.555  2653  2653   "down to my feet"
+  88.555   88.588  2654  2654   "down to my feet"
+  88.588   88.622  2655  2655   "down to my feet"
+  88.622   88.655  2656  2656   "down to my feet"
+  88.655   88.689  2657  2657   "down to my feet"
+  88.689   88.722  2658  2658   "down to my feet"
+  88.722   88.755  2659  2659   "down to my feet"
+  88.755   88.789  2660  2660   "down to my feet"
+  88.789   88.822  2661  2661   "down to my feet"
+  88.822   88.855  2662  2662   "down to my feet"
+  88.855   88.889  2663  2663   "down to my feet"
+  88.889   88.922  2664  2664   "down to my feet"
+  88.922   88.956  2665  2665   "down to my feet"
+  88.956   88.989  2666  2666   "down to my feet"
+  88.989   89.022  2667  2667   "down to my feet"
+  89.022   89.056  2668  2668   "down to my feet"
+  89.056   89.089  2669  2669   "down to my feet"
+  89.089   89.122  2670  2670   "down to my feet"
+  89.122   89.156  2671  2671   "down to my feet"
+  89.156   89.189  2672  2672   "down to my feet"
+  89.189   89.222  2673  2673   "down to my feet"
+  89.222   89.256  2674  2674   "down to my feet"
+  89.256   89.289  2675  2675   "down to my feet"
+  89.289   89.323  2676  2676   "down to my feet"
+  89.323   89.356  2677  2677   "down to my feet"
+  89.356   89.389  2678  2678   "down to my feet"
+  89.389   89.423  2679  2679   "down to my feet"
+  89.423   89.456  2680  2680   "down to my feet"
+  89.456   89.489  2681  2681   "down to my feet"
+  89.489   89.523  2682  2682   "down to my feet"
+  89.523   89.556  2683  2683   "down to my feet"
+  89.556   89.590  2684  2684   "down to my feet"
+  89.590   89.623  2685  2685   "down to my feet"
+  89.623   89.656  2686  2686   "down to my feet"
+  89.656   89.690  2687  2687   "down to my feet"
+  89.690   89.723  2688  2688   "down to my feet"
+  90.357   92.259  2708  2764   "NOW I'M DROWNING"
+  92.626   92.960  2776  2785   "fall"
+  92.960   93.293  2786  2795   "in"
+  93.293   93.627  2796  2805   "into"
+  93.627   93.961  2806  2815   "the"
+  93.961   94.294  2816  2825   "sea" [sink]
+  95.596   95.896  2865  2873   "NO"
+  95.896   96.530  2874  2892   "MORE"
+  96.530   96.863  2893  2902   "PROSPECTS"
+  96.863   98.165  2903  2941   "PROSPECTS"
+  98.165   98.432  2942  2949   "NO"
+  98.432   99.066  2950  2968   "MORE"
+  99.066   99.266  2969  2974   "PROSPECTS"
+  99.266   99.466  2975  2980   "PROSPECTS"
+  99.466   99.666  2981  2986   "PROSPECTS"
+  99.666   99.866  2987  2992   "PROSPECTS"
+  99.866  100.067  2993  2998   "PROSPECTS"
+ 100.067  100.267  2999  3004   "PROSPECTS"
+ 100.734  101.568  3019  3043   "only objects"
+ 101.568  101.702  3044  3047   "only objects"
+ 101.702  101.835  3048  3051   "only objects"
+ 101.835  101.935  3052  3054   "only objects"
+ 101.935  102.069  3055  3058   "only objects"
+ 102.069  102.169  3059  3061   "only objects"
+ 102.169  102.302  3062  3065   "only objects"
+ 102.302  102.369  3066  3067   "only objects"
+ 102.369  102.402  3068  3068   "only objects"
+ 102.402  102.436  3069  3069   "only objects"
+ 102.436  102.469  3070  3070   "only objects"
+ 102.469  102.502  3071  3071   "only objects"
+ 102.502  102.536  3072  3072   "only objects"
+ 102.536  102.569  3073  3073   "only objects"
+ 102.569  102.603  3074  3074   "only objects"
+ 102.603  102.636  3075  3075   "only objects"
+ 102.636  102.669  3076  3076   "only objects"
+ 102.669  102.703  3077  3077   "only objects"
+ 102.703  102.736  3078  3078   "only objects"
+ 102.736  102.769  3079  3079   "only objects"
+ 102.769  102.803  3080  3080   "only objects"
+ 102.803  102.836  3081  3081   "only objects"
+ 102.836  102.869  3082  3082   "only objects"
+ 102.869  102.903  3083  3083   "only objects"
+ 102.903  102.936  3084  3084   "only objects"
+ 102.936  102.970  3085  3085   "only objects"
+ 102.970  103.003  3086  3086   "only objects"
+ 103.003  103.036  3087  3087   "reminding me"
+ 103.036  103.337  3088  3096   "reminding me"
+ 103.637  103.937  3106  3114   "reminding me"
+ 104.237  104.538  3124  3132   "reminding me"
+ 104.838  105.138  3142  3150   "reminding me"
+ 105.939  108.542  3175  3252   "reminding me"
+ 108.542  109.376  3253  3277   "NOTHING ELSE"
+ 109.376  109.476  3278  3280   "but my defeat...." [decay]
+ 109.476  109.576  3281  3283   "but my defeat...." [decay]
+ 109.576  109.676  3284  3286   "but my defeat...." [decay]
+ 109.676  109.776  3287  3289   "but my defeat...." [decay]
+ 109.776  109.876  3290  3292   "but my defeat...." [decay]
+ 109.876  109.977  3293  3295   "but my defeat...." [decay]
+ 109.977  110.077  3296  3298   "but my defeat...." [decay]
+ 110.077  110.177  3299  3301   "but my defeat...." [decay]
+ 110.177  110.277  3302  3304   "but my defeat...." [decay]
+ 110.277  110.377  3305  3307   "but my defeat...." [decay]
+ 110.377  111.111  3308  3329   "...."
+ 111.111  113.714  3330  3407   "NOTHING ELSE"
+ 113.714  114.047  3408  3417   "NOT"
+ 114.047  114.381  3418  3427   "NOT EVEN ME" [type]
+ 114.381  114.681  3428  3436   "NOT EVEN ME" [type]
+ 114.681  115.916  3437  3473   "NOT EVEN ME" [type]
+ 115.916  117.184  3474  3511   "can't see" + "I CAN'T BREATHE" [typeloop]
+ 118.485  118.552  3551  3552   "I CAN'T BREATHE" [typeloop]
+ 118.552  118.618  3553  3554   "I CAN'T BREATHE" [typeloop]
+ 118.618  118.685  3555  3556   "I CAN'T BREATHE" [typeloop]
+ 118.685  118.752  3557  3558   "I CAN'T BREATHE" [typeloop]
+ 118.752  118.819  3559  3560   "I CAN'T BREATHE" [typeloop]
+ 118.819  118.885  3561  3562   "I CAN'T BREATHE" [typeloop]
+ 118.885  118.952  3563  3564   "I CAN'T BREATHE" [typeloop]
+ 118.952  119.019  3565  3566   "I CAN'T BREATHE" [typeloop]
+ 119.019  119.086  3567  3568   "I CAN'T BREATHE" [typeloop]
+ 119.086  119.152  3569  3570   "I CAN'T BREATHE" [typeloop]
+ 119.152  119.219  3571  3572   "I CAN'T BREATHE" [typeloop]
+ 119.219  119.286  3573  3574   "I CAN'T BREATHE" [typeloop]
+ 119.286  119.353  3575  3576   "I CAN'T BREATHE" [typeloop]
+ 119.353  119.419  3577  3578   "I CAN'T BREATHE" [typeloop]
+ 119.419  119.486  3579  3580   "I CAN'T BREATHE" [typeloop]
+ 119.486  119.553  3581  3582   "I CAN'T BREATHE" [typeloop]
+ 119.553  119.620  3583  3584   "I CAN'T BREATHE" [typeloop]
+ 119.620  119.686  3585  3586   "I CAN'T BREATHE" [typeloop]
+ 119.686  119.753  3587  3588   "I CAN'T BREATHE" [typeloop]
+ 119.753  119.820  3589  3590   "I CAN'T BREATHE" [typeloop]
+ 119.820  119.886  3591  3592   "I CAN'T BREATHE" [typeloop]
+ 119.886  119.953  3593  3594   "I CAN'T BREATHE" [typeloop]
+ 119.953  120.020  3595  3596   "I CAN'T BREATHE" [typeloop]
+ 120.020  120.087  3597  3598   "I CAN'T BREATHE" [typeloop]
+ 120.087  120.153  3599  3600   "I CAN'T BREATHE" [typeloop]
+ 120.153  120.220  3601  3602   "I CAN'T BREATHE" [typeloop]
+ 120.220  120.287  3603  3604   "I CAN'T BREATHE" [typeloop]
+ 121.388  121.488  3638  3640   "MEMORIES"
+ 121.488  122.122  3641  3659   "MEMORIES" + "MEMORIES"
+ 122.122  122.222  3660  3662   "MEMORIES" + "BECOME"
+ 123.757  124.491  3709  3730   "DEBRIS"
+ 124.491  124.725  3731  3737   "DEBRIS" [sink]
+ 124.725  124.758  3738  3738   "DEBRIS" [sink]
+ 124.758  124.858  3739  3741   "DEBRIS" [sink]
+ 124.858  124.891  3742  3742   "DEBRIS" [sink]
+ 124.891  124.925  3743  3743   "DEBRIS" [sink]
+ 124.925  124.958  3744  3744   "DEBRIS" [sink]
+ 124.958  124.992  3745  3745   "DEBRIS" [sink]
+ 124.992  125.025  3746  3746   "DEBRIS" [sink]
+ 125.025  125.058  3747  3747   "DEBRIS" [sink]
+ 125.058  125.092  3748  3748   "DEBRIS" [sink]
+ 125.092  125.125  3749  3749   "DEBRIS" [sink]
+ 126.159  126.560  3781  3792   "SO"
+ 126.560  127.260  3793  3813   "ARE"
+ 127.260  127.961  3814  3834   "WE"
+ 129.062  129.997  3868  3895   "ENEMIES?" [erase]
+ 129.997  130.063  3896  3897   "ENEMIES?" [erase]
+ 130.063  130.130  3898  3899   "ENEMIES?" [erase]
+ 130.130  130.197  3900  3901   "ENEMIES?" [erase]
+ 130.197  130.263  3902  3903   "ENEMIES?" [erase]
+ 130.263  130.330  3904  3905   "ENEMIES?" [erase]
+ 130.330  130.397  3906  3907   "ENEMIES?" [erase]
+ 130.397  130.464  3908  3909   "ENEMIES?" [erase]
+ 131.365  131.765  3937  3948   "WILL"
+ 131.765  132.265  3949  3963   "YOU"
+ 132.265  133.100  3964  3988   "STILL"
+ 134.001  135.035  4016  4046   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.035  135.068  4047  4047   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.068  135.102  4048  4048   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.102  135.135  4049  4049   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.135  135.168  4050  4050   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.168  135.202  4051  4051   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.202  135.268  4052  4053   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.268  135.302  4054  4054   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.302  135.335  4055  4055   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.335  135.369  4056  4056   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.369  135.402  4057  4057   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.402  135.435  4058  4058   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.435  135.469  4059  4059   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.469  135.502  4060  4060   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.502  135.535  4061  4061   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.535  135.569  4062  4062   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.569  135.602  4063  4063   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.602  135.636  4064  4064   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 135.636  135.669  4065  4065   "REMEMBER?" [slide] + "remember?" + "remember?"
+ 137.004  138.338  4106  4145   "re"
+ 138.338  139.373  4146  4176   "remem"
+ 139.373  140.774  4177  4218   "remember"
+ 140.774  141.341  4219  4235   "remember me"
+ 141.341  141.775  4236  4248   "remember me" + "(breath)"
+ 141.775  142.909  4249  4282   "remember me" + "(breath)"
+ 142.909  144.311  4283  4324   "remember me" + "(breathe)" + "(breath)"
+ 144.311  147.147  4325  4409   "remember me" + "(breathe)" + "remember me" + "(breath)"
+ 147.147  148.548  4410  4451   "remember me" + "(breathe)" + "remember me" + "remember me" + "(breath)"
+ 148.548  152.419  4452  4567   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "(breath)"
+ 152.419  153.553  4568  4601   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breath)"
+ 153.553  154.955  4602  4643   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "(breath)"
+ 154.955  156.423  4644  4687   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "(breath)"
+ 156.423  157.624  4688  4723   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "(breath)"
+ 157.624  158.825  4724  4759   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "(breath)"
+ 158.825  160.193  4760  4800   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "(breath)"
+ 160.193  161.428  4801  4837   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "(breath)"
+ 161.428  165.966  4838  4973   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 165.966  166.099  4974  4977   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 166.099  166.133  4978  4978   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 166.133  166.233  4979  4981   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 166.233  166.266  4982  4982   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 166.266  166.299  4983  4983   "remember me" + "(breathe)" + "remember me" + "remember me" + "remember me" + "remember" + "(breathe)" + "are we" + "remember me" + "enemies?" + "RE" + "REMEM" + "REMEMBER" + "REMEMBER ME" + "(breath)"
+ 166.299  166.333  4984  4984   "REMEMBER ME"
+ 166.333  166.366  4985  4985   "REMEMBER ME"
+ 166.366  166.400  4986  4986   "REMEMBER ME"
+ 166.400  166.433  4987  4987   "REMEMBER ME"
+ 172.673  173.940  5175  5212   "i can't see"
+ 175.308  176.443  5254  5287   "i can't breathe"
+ 177.811  179.312  5329  5373   "i can't see"
+ 180.781  181.915  5418  5451   "can't breathe"
+ 183.383  185.218  5496  5550   "nothing else"
+ 185.886  186.153  5571  5578   "but"
+ 186.153  186.486  5579  5588   "my"
+ 186.486  187.854  5589  5629   "defeat"
+ 188.455  190.424  5648  5706   "nothing else"
+ 191.058  192.592  5726  5771   "notevenme"

@@ -1,0 +1,273 @@
+/* ============================================================
+   memories of me — live lyric video
+   Black type on white (→ hard cut to white-on-black for the final
+   act). DOM-rendered kinetic typography, synced to the audio clock.
+   Fills any viewport; no lag (declarative cues, GPU transforms only).
+   ============================================================ */
+
+:root {
+  --bg: #fff;
+  --fg: #111;
+  --mono: "Courier Prime", "Courier New", Courier, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #fff;   /* opens on white to match the landing — no flash */
+  color: #111;
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------- THE STAGE ---------------- */
+.stage {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .25s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.stage.is-live { opacity: 1; }
+
+.cue-layer    { position: absolute; inset: 0; z-index: 3; }
+.video-layer  { position: absolute; inset: 0; z-index: 2; }
+.dialog-layer { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+.terminal-layer { position: absolute; inset: 0; z-index: 9; pointer-events: none; }
+
+/* Each rendered lyric line. Positioned + transformed by the engine. */
+.cue {
+  position: absolute;
+  color: var(--fg);
+  white-space: pre;           /* honour \n only; never auto-wrap */
+  line-height: 1.0;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0;
+}
+/* the animated caret for typewriter cues */
+.cue .caret {
+  display: inline-block;
+  width: .06em;
+  margin-left: .04em;
+  background: currentColor;
+  animation: caretBlink 1.02s steps(1) infinite;
+  vertical-align: baseline;
+  align-self: stretch;
+}
+@keyframes caretBlink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+
+/* type roles ---------------------------------------------- */
+.cue.r-sans    { font-family: "Helvetica Neue", "Inter", Helvetica, Arial, sans-serif; font-weight: 400; }
+.cue.r-serif   { font-family: "Playfair Display", Georgia, "Times New Roman", serif; font-weight: 400; }
+.cue.r-serifIt { font-family: "Playfair Display", Georgia, "Times New Roman", serif; font-style: italic; font-weight: 400; }
+.cue.r-didone  { font-family: "Playfair Display", Georgia, serif; font-weight: 900; }
+.cue.r-didoneIt{ font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 900; }
+.cue.r-mono    { font-family: var(--mono); font-weight: 400; }
+
+/* ---------------- THE FILM PANELS ----------------
+   Two vertical passages (candle being lit; face in candlelight).
+   Cropped narrow, centered, letterboxed by the white stage. */
+.film {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ---------------- XP RECYCLE-BIN DIALOG ----------------
+   Rebuilt natively (crisper than a crop, and the buttons are live). */
+.xp-dialog {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(480px, 86vw);
+  border: 1px solid #0831d9;
+  border-radius: 8px 8px 0 0;
+  background: #ece9d8;
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  font-family: Tahoma, "Segoe UI", Verdana, sans-serif;
+  overflow: hidden;
+  pointer-events: auto;
+  z-index: 6;
+}
+.xp-dialog__bar {
+  height: 30px;
+  background: linear-gradient(180deg, #0058ee 0%, #3593ff 8%, #288eff 40%, #0855dd 88%, #0846c9 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 4px 0 8px;
+  font-weight: 700;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px rgba(0,0,0,.5);
+}
+.xp-dialog__bar span { flex: 1; }
+.xp-dialog__x {
+  width: 22px; height: 21px;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #f7856b, #e5451f 55%, #d63016);
+  color: #fff; font-weight: 700; font-size: 13px; line-height: 19px;
+  text-align: center; box-shadow: inset 0 0 1px #fff;
+}
+.xp-dialog__body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 18px 8px;
+  font-size: 13px;
+  color: #000;
+}
+.xp-dialog__icon { flex: 0 0 auto; width: 44px; height: 44px; }
+.xp-dialog__msg { line-height: 1.4; }
+.xp-dialog__btns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 18px 20px;
+}
+.xp-btn {
+  min-width: 82px;
+  padding: 5px 10px;
+  font-family: Tahoma, "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: #000;
+  background: linear-gradient(180deg, #fdfdfd, #eceae1 45%, #dcd8c8);
+  border: 1px solid #8c8676;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: inset 0 0 2px #fff;
+}
+.xp-btn:hover { border-color: #f6a836; box-shadow: inset 0 0 4px #ffd98a; }
+.xp-btn:active { background: linear-gradient(180deg, #dcd8c8, #eceae1); }
+.xp-btn.is-default { border-color: #2b64c4; box-shadow: inset 0 0 3px #9fc3ff; }
+
+/* the XP arrow cursor takes over while the dialog is live */
+body.xp-cursor, body.xp-cursor * { cursor: default; }
+
+/* ---------------- FAKE TERMINAL (the payoff) ---------------- */
+.terminal {
+  position: absolute;
+  inset: 0;
+  background: #0a0a0a;
+  color: #d7d7d7;
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: clamp(12px, 2.1vw, 17px);
+  line-height: 1.42;
+  padding: 5vh 6vw;
+  overflow: hidden;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.terminal.is-on { opacity: 1; }
+.terminal.is-crt::after {   /* faint scanlines + vignette — reads as a real CRT */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px),
+    radial-gradient(120% 120% at 50% 50%, transparent 60%, rgba(0,0,0,.5));
+  pointer-events: none;
+}
+.terminal__out { white-space: pre-wrap; word-break: break-word; }
+.terminal .ln-err  { color: #ff6b5e; }
+.terminal .ln-warn { color: #ffd75e; }
+.terminal .ln-ok   { color: #7ee081; }
+.terminal .ln-dim  { color: #7a7a7a; }
+.terminal .tcaret {
+  display: inline-block; width: .55em; height: 1.05em;
+  background: #d7d7d7; vertical-align: text-bottom;
+  animation: caretBlink 1.02s steps(1) infinite;
+}
+/* the terminal dissolves away letter-by-letter at the very end */
+.terminal.is-dissolving { transition: opacity 2.4s ease; opacity: 0; }
+
+/* ---------------- LANDING ---------------- */
+.landing {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: #fff;
+  color: #111;
+  display: grid;
+  place-items: center;
+  transition: opacity .5s ease;
+}
+.landing.is-gone { opacity: 0; pointer-events: none; }
+.landing__mark { text-align: center; padding: 6vw; }
+.landing__eyebrow {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .34em;
+  font-size: clamp(11px, 1.4vw, 15px);
+  color: #111;
+  margin-left: .34em;
+  margin-bottom: 2.2rem;
+}
+.landing__title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: .005em;
+  font-size: clamp(40px, 9.5vw, 128px);
+  line-height: .98;
+  color: #111;
+  margin-bottom: 2.6rem;
+}
+.playbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 1.2rem; background: none; border: none; cursor: pointer;
+  transition: transform .18s ease, opacity .3s ease;
+}
+.playbtn:hover { transform: scale(1.08); }
+.playbtn:active { transform: scale(0.96); }
+.playbtn:focus-visible { outline: 2px solid #111; outline-offset: 6px; border-radius: 4px; }
+.playbtn.is-loading { opacity: calc(0.2 + 0.55 * var(--load, 0)); }
+.playbtn__tri {
+  width: 0; height: 0; border-style: solid;
+  border-width: clamp(20px, 3.4vw, 38px) 0 clamp(20px, 3.4vw, 38px) clamp(32px, 5.4vw, 58px);
+  border-color: transparent transparent transparent #111;
+}
+
+/* transient sync-nudge readout */
+.toast {
+  position: fixed; left: 50%; bottom: 64px; transform: translateX(-50%);
+  z-index: 50; padding: 8px 14px; background: rgba(0,0,0,.72); color: #fff;
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+  border-radius: 6px; opacity: 0; transition: opacity .18s ease; pointer-events: none;
+}
+.toast.is-on { opacity: 1; }
+
+/* ---------------- END CARD ---------------- */
+.endcard {
+  position: fixed; inset: 0; z-index: 35;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.6rem; background: rgba(0,0,0,0); transition: background .6s ease;
+}
+.endcard.is-visible { background: #000; }   /* the song ends on black */
+.endcard__link, .endcard__btn {
+  background: none; border: none; color: #eaeaea;
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: .3em;
+  font-size: clamp(14px, 2vw, 20px); text-decoration: none; cursor: pointer;
+  opacity: 0; transition: opacity .5s ease .3s, color .18s ease;
+}
+.endcard__link:hover, .endcard__btn:hover { color: #999; }
+.endcard.is-visible .endcard__link,
+.endcard.is-visible .endcard__btn { opacity: 1; }
+
+[hidden] { display: none !important; }
