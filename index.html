@@ -3,25 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <!-- iOS Safari tints its status bar + toolbar to match this; the engine flips it to #000 for the final act -->
+  <!-- iOS Safari tints its status bar + toolbar to match this; the player flips it to #000 for the final act -->
   <meta name="theme-color" content="#ffffff" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>memories of me — clay and kelsy</title>
 
-  <!-- Fonts: brand mono (Courier Prime) + the faces used in the video (Playfair Display / Didone, Helvetica→Inter) -->
+  <!-- brand faces: Courier Prime (mono nav) + Playfair (the title) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700;1,900&family=VT323&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
-  <!-- ============ THE SHOW ============ -->
+  <!-- ============ THE PLAYER ============ -->
   <div id="stage" class="stage" aria-hidden="true">
-    <div id="cueLayer" class="cue-layer"></div>
-    <div id="videoLayer" class="video-layer" aria-hidden="true"></div>
-    <div id="dialogLayer" class="dialog-layer" aria-hidden="true"></div>
-    <div id="terminalLayer" class="terminal-layer" aria-hidden="true"></div>
+    <video id="film" class="film" playsinline preload="metadata"></video>
   </div>
 
   <!-- ============ LANDING ============ -->
@@ -35,19 +32,12 @@
     </div>
   </section>
 
-  <!-- transient readout for the audio-sync nudge -->
-  <div id="toast" class="toast" aria-hidden="true"></div>
-
   <!-- ============ END CARD ============ -->
   <section id="endcard" class="endcard" hidden>
     <a id="goBack" class="endcard__link" href="https://clayandkelsy.com/i-am/" target="_top" rel="noopener">[ go back ]</a>
     <button id="replayBtn" class="endcard__btn" type="button">[ replay ]</button>
   </section>
 
-  <!-- audio clock -->
-  <audio id="song" src="assets/memories-of-me.mp3" preload="auto"></audio>
-
-  <script src="cues.js?v=6"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>
