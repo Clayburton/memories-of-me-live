@@ -478,6 +478,7 @@
   function endShow() {
     running = false;
     try { audio.pause(); } catch (e) {}
+    broadcastBg("#000000");   // the ending is black — flip the iOS bars too (matches i-am)
     stage.classList.remove("is-live");
     endcard.hidden = false;
     requestAnimationFrame(function () { endcard.classList.add("is-visible"); });
