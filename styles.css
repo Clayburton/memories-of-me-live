@@ -32,13 +32,30 @@ html, body {
 .stage.is-live { opacity: 1; }
 .stage.is-black { background: #000; }   /* the video ends on black — carry it to the frame */
 
-.film {
+/* the WebGL canvas draws the video with the effects */
+.fx {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;            /* fills the whole screen at any size */
+  display: block;
+  background: #fff;
+}
+/* the <video> keeps decoding (WebGL reads it) but is hidden behind the canvas */
+.film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
   background: #000;
+  opacity: 0;
+  pointer-events: none;
 }
+/* no WebGL → show the plain video, hide the canvas */
+body.no-gl .fx { display: none; }
+body.no-gl .film { opacity: 1; }
 
 /* ---------------- LANDING ---------------- */
 .landing {

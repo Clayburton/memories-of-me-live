@@ -13,12 +13,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=13" />
+  <link rel="stylesheet" href="styles.css?v=14" />
+
+  <!-- three.js (same CDN pin as the flower homepage — shared cache) -->
+  <script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js" } }
+  </script>
 </head>
 <body>
   <!-- ============ THE PLAYER ============ -->
   <div id="stage" class="stage" aria-hidden="true">
-    <video id="film" class="film" playsinline preload="metadata"></video>
+    <!-- the video decodes here (hidden); WebGL draws it to the canvas with the effects.
+         If WebGL fails, styles.css falls back to showing the <video> directly. -->
+    <video id="film" class="film" playsinline preload="metadata" crossorigin="anonymous"></video>
+    <canvas id="fx" class="fx"></canvas>
   </div>
 
   <!-- ============ LANDING ============ -->
@@ -38,6 +46,6 @@
     <button id="replayBtn" class="endcard__btn" type="button">[ replay ]</button>
   </section>
 
-  <script src="app.js?v=14"></script>
+  <script type="module" src="app.js?v=17"></script>
 </body>
 </html>
