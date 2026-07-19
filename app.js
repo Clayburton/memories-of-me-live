@@ -82,90 +82,70 @@ import * as THREE from "three";
     uTime:  { value: 0 },
     uDark:  { value: 0 },
     uAspect: { value: 1 },
-    /* the effect "knobs" — the timeline crossfades these so the look morphs with the song */
-    uRipple:  { value: 1.0 },   // underwater undulation
-    uSmear:   { value: 0.1 },   // ambient memory-melt floor
-    uRGB:     { value: 0.0 },   // chromatic fracture
-    uDrown:   { value: 0.0 },   // sink + cold-water cast
-    uGlitch:  { value: 0.0 },   // digital tearing / decay
-    uKaleido: { value: 0.0 },   // hall-of-mirrors echo
-    uBloom:   { value: 0.3 },   // dreamy overexposed nostalgia
-    /* click shockwave */
-    uBurst:   { value: 0.0 },
-    uBurstPos:{ value: new THREE.Vector2(0.5, 0.5) },
-    uBurstAge:{ value: 0.0 },
+    /* the effect "knobs" — the timeline picks WHICH flavour is available;
+       interaction (moving / holding) is what actually reveals it. Idle = clean video. */
+    uRipple:  { value: 0.0 },   // ring lens around the moving cursor
+    uSmear:   { value: 0.0 },   // memory-melt trail dragged behind motion
+    uRGB:     { value: 0.0 },   // colour-split intensity while click-holding
+    uDrown:   { value: 0.0 },   // cold-water lens around the cursor
+    uGlitch:  { value: 0.0 },   // glitch patch at the cursor only
+    uHold:    { value: 0.0 },   // pointer held → the colour effect holds
   };
   const VERT = "varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }";
   const SIM_FRAG = `
     precision highp float;
     varying vec2 vUv;
     uniform sampler2D uVideo, uPrev;
-    uniform vec2 uCover, uMouse, uVel, uBurstPos;
-    uniform float uPresence, uTime, uDark, uAspect;
-    uniform float uRipple, uSmear, uRGB, uDrown, uGlitch, uKaleido, uBurst, uBurstAge;
+    uniform vec2 uCover, uMouse, uVel;
+    uniform float uPresence, uHold, uTime, uDark, uAspect;
+    uniform float uRipple, uSmear, uRGB, uDrown, uGlitch;
     vec2 coverUV(vec2 uv){ return (uv-0.5)*uCover + 0.5; }
     float hash(vec2 p){ return fract(sin(dot(p, vec2(41.3, 289.1)))*43758.5453); }
     void main(){
       vec2 uv = vUv;
       vec2 asp = vec2(uAspect, 1.0);
-
-      /* kaleido: a hall-of-mirrors echo — the memory folding back on itself */
-      if(uKaleido > 0.001){
-        vec2 ku = uv;
-        ku.x = 0.5 - abs(ku.x - 0.5);
-        ku.y = mix(ku.y, 0.75 - abs(ku.y - 0.5), 0.30);
-        float pulse = 1.0 + 0.03 * sin(uTime * 0.9);
-        ku = (ku - 0.5) * pulse + 0.5;
-        uv = mix(uv, ku, uKaleido);
-      }
-
-      /* glitch: horizontal band tearing + jitter — the picture decaying */
-      if(uGlitch > 0.001){
-        float band = floor(uv.y * 24.0);
-        float seed = hash(vec2(band, floor(uTime * 9.0)));
-        uv.x += step(0.80, seed) * (seed - 0.5) * 0.18 * uGlitch;
-        uv.x += (hash(vec2(floor(uTime*12.0), 7.0)) - 0.5) * 0.02 * uGlitch * step(0.7, seed);
-      }
-
       vec2 dm = (uv - uMouse) * asp;
       float dist = length(dm);
+      float move = uPresence;                     /* 0 when still → clean video */
+      float lens = smoothstep(0.42, 0.0, dist);   /* 1 at the cursor → 0 away */
 
-      /* ripple: idle undulation + cursor rings, amplified while drowning */
-      float amp = uRipple * (1.0 + 2.2 * uDrown);
-      vec2 disp = vec2(sin(uv.y*16.0 + uTime*0.6), cos(uv.x*14.0 + uTime*0.5)) * 0.0016 * amp;
-      disp += vec2(sin(uv.y*6.0 + uTime*1.1), sin(uv.x*5.0 - uTime*0.8)) * 0.006 * uDrown;
-      disp.y += uDrown * 0.010 * (0.5 + 0.5*sin(uTime*0.7));           /* slow sink */
-      float ring = sin(dist*42.0 - uTime*3.2) * exp(-dist*7.0);
-      disp += (normalize(dm + 1e-4)/asp) * ring * 0.012 * (0.35 + uPresence) * uRipple;
+      /* ripple: concentric rings from the cursor — only while moving */
+      vec2 disp = vec2(0.0);
+      float ring = sin(dist*40.0 - uTime*3.2) * exp(-dist*6.0);
+      disp += (normalize(dm + 1e-4)/asp) * ring * 0.014 * move * uRipple;
+      /* water: cold slow swell around the cursor while moving (drowning) */
+      disp += vec2(sin(uv.y*7.0 + uTime*1.1), sin(uv.x*6.0 - uTime*0.8)) * 0.007 * uDrown * move * lens;
 
-      /* click burst: an expanding shockwave ring pushes the picture outward */
-      if(uBurst > 0.001){
-        vec2 bd = (uv - uBurstPos) * asp;
-        float bdist = length(bd);
-        float r = uBurstAge * 0.9;
-        float w = exp(-pow((bdist - r) * 9.0, 2.0));
-        disp += (normalize(bd + 1e-4)/asp) * w * 0.05 * uBurst;
+      /* glitch: horizontal band tearing — ONLY in a patch around the cursor, while moving */
+      float gmask = uGlitch * move * lens;
+      float gshift = 0.0;
+      if(gmask > 0.001){
+        float band = floor(uv.y * 26.0);
+        float seed = hash(vec2(band, floor(uTime * 10.0)));
+        gshift = step(0.70, seed) * (seed - 0.5) * 0.22 * gmask;
       }
 
-      vec2 suv = coverUV(uv + disp);
+      vec2 off = disp + vec2(gshift, 0.0);
+      vec2 suv = coverUV(uv + off);
 
-      /* RGB split: pull the colour channels apart (fracture); the burst flashes it too */
-      float split = uRGB * 0.006 + uBurst * exp(-uBurstAge*3.0) * 0.012;
+      /* colour: chromatic split that HOLDS while you click-and-hold, around the cursor */
+      float split = uHold * (0.5 + uRGB) * lens * 0.013;
       vec3 vid;
-      if(split > 0.0001){
+      if(split > 0.0002){
         vec2 dir = normalize(dm + vec2(0.001, 0.0)) / asp;
-        vid.r = texture2D(uVideo, coverUV(uv + disp + dir*split)).r;
+        vid.r = texture2D(uVideo, coverUV(uv + off + dir*split)).r;
         vid.g = texture2D(uVideo, suv).g;
-        vid.b = texture2D(uVideo, coverUV(uv + disp - dir*split)).b;
+        vid.b = texture2D(uVideo, coverUV(uv + off - dir*split)).b;
       } else {
         vid = texture2D(uVideo, suv).rgb;
       }
 
-      /* memory smear: previous frame dragged against the motion + a hair of zoom = melt */
+      /* memory smear: the picture dragged behind the cursor's motion = melting trail.
+         Purely velocity-driven, so it vanishes the moment you stop moving. */
       vec2 fbUv = uv - uVel*0.35;
       fbUv = (fbUv - 0.5)*0.9975 + 0.5;
       vec3 ghost = texture2D(uPrev, fbUv).rgb;
-      float smear = clamp((0.18 + uSmear*0.42 + 1.7*length(uVel)) * exp(-dist*2.2*(1.0 - uSmear*0.5)), 0.0, 0.94);
+      float smear = clamp((0.6 + uSmear*1.4) * length(uVel) * 6.0, 0.0, 0.94) * exp(-dist*2.0);
       vec3 col = mix(vid, ghost, smear);
 
       /* in the black act: stop feeding the video — hold the last living memory */
@@ -176,58 +156,50 @@ import * as THREE from "three";
     precision highp float;
     varying vec2 vUv;
     uniform sampler2D uTex;
-    uniform vec2 uMouse, uBurstPos;
-    uniform float uDark, uAspect, uTime, uDrown, uGlitch, uBloom, uBurst, uBurstAge;
+    uniform vec2 uMouse;
+    uniform float uDark, uAspect, uTime, uDrown, uGlitch, uPresence, uHold;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(41.3, 289.1)))*43758.5453); }
     void main(){
       vec3 col = texture2D(uTex, vUv).rgb;
       vec2 asp = vec2(uAspect, 1.0);
+      float dist = length((vUv - uMouse) * asp);
+      float move = uPresence;
+      float lens = smoothstep(0.42, 0.0, dist);   /* 1 at the cursor → 0 away */
 
-      /* bloom: dreamy overexposed highlights */
-      if(uBloom > 0.001){
-        float lum = dot(col, vec3(0.299, 0.587, 0.114));
-        vec3 glow = col * smoothstep(0.55, 1.0, lum);
-        col += glow * uBloom * 1.4;
-      }
-
-      /* drown: sink toward cold deep water, darker + bluer toward the bottom */
-      if(uDrown > 0.001){
-        vec3 deep = col * vec3(0.35, 0.62, 0.90);
-        float depth = smoothstep(0.0, 1.0, vUv.y);
-        deep *= mix(1.0, 0.55, depth * 0.8);
+      /* water: a cold cast washes around the cursor while moving (drowning) */
+      float wmask = uDrown * move * lens;
+      if(wmask > 0.001){
+        vec3 deep = col * vec3(0.40, 0.66, 0.92);
         float caus = 0.5 + 0.5*sin(vUv.x*30.0 + uTime*1.3)*sin(vUv.y*24.0 - uTime*1.1);
-        deep += caus * 0.05 * uDrown;
-        col = mix(col, deep, uDrown * 0.85);
+        deep += caus * 0.05;
+        col = mix(col, deep, wmask * 0.9);
       }
 
-      /* glitch: scanline darkening + colour-channel drop flashes */
-      if(uGlitch > 0.001){
-        float scan = 0.92 + 0.08*sin(vUv.y*700.0);
-        col *= mix(1.0, scan, uGlitch);
+      /* glitch: scanlines + channel drop — only inside the cursor patch, while moving */
+      float gm = uGlitch * move * lens;
+      if(gm > 0.001){
+        float scan = 0.90 + 0.10*sin(vUv.y*700.0);
+        col *= mix(1.0, scan, gm);
         float drop = step(0.90, hash(vec2(floor(uTime*10.0), floor(vUv.y*30.0))));
-        col.g = mix(col.g, col.g*(1.0 - drop*0.6), uGlitch);
+        col.g = mix(col.g, col.g*(1.0 - drop*0.6), gm);
       }
 
-      /* click burst: a shock ring that inverts what it crosses — reads on any background */
-      if(uBurst > 0.001){
-        float bdist = length((vUv - uBurstPos)*asp);
-        float ringw = exp(-pow((bdist - uBurstAge*0.9)*10.0, 2.0));
-        float k = ringw * uBurst;
-        col = mix(col, 1.0 - col, k * 0.85);
-        col += k * 0.12;
-      }
-
-      /* dark-act spotlight (the funeral) */
+      /* THE BLACK ACT — a warm lantern in the dark that the mouse carries.
+         Everything is black except a soft orb around the cursor, where the last
+         living memory glows back in warm sepia. This is the unique mouse effect. */
       if(uDark > 0.001){
-        float d = length((vUv - uMouse)*asp);
-        float sp = smoothstep(0.27, 0.015, d);            /* soft light circle */
-        float g = dot(col, vec3(0.299, 0.587, 0.114));
-        vec3 mem = mix(vec3(g), col, 0.45) * vec3(1.04, 0.99, 0.93);  /* faded photograph */
-        col = mix(col, mem * sp, uDark);
+        vec3 mem0 = col;
+        float pulse = 0.23 + 0.02 * sin(uTime * 1.6);            /* gentle breath */
+        float orb  = smoothstep(pulse, 0.02, dist);              /* the light circle */
+        float halo = smoothstep(pulse*1.9, pulse*0.5, dist);     /* faint outer glow */
+        float g = dot(mem0, vec3(0.299, 0.587, 0.114));
+        vec3 sepia = mix(vec3(g), mem0, 0.5) * vec3(1.12, 0.98, 0.80);
+        vec3 lantern = sepia * orb + vec3(0.95, 0.60, 0.28) * halo * 0.12;
+        col = mix(mem0, lantern, uDark);                         /* → pure black outside the orb */
       }
 
       float gr = hash(vUv*vec2(1280.0, 720.0) + uTime);
-      col += (gr - 0.5) * 0.03;                            /* soft film grain */
+      col += (gr - 0.5) * 0.02;                                  /* subtle film grain */
       gl_FragColor = vec4(col, 1.0);
     }`;
 
@@ -238,18 +210,17 @@ import * as THREE from "three";
      Modes are keyed to the emotional beat of each lyric moment.
      ============================================================ */
   const MODES = {
-    //          ripple smear rgb  drown glitch kaleido bloom
-    dream:    { ripple:1.00, smear:0.10, rgb:0.00, drown:0.00, glitch:0.00, kaleido:0.00, bloom:0.38 }, // floating, nostalgic
-    pieces:   { ripple:0.80, smear:0.42, rgb:0.06, drown:0.00, glitch:0.00, kaleido:0.00, bloom:0.24 }, // memory-melt trail
-    fracture: { ripple:0.70, smear:0.20, rgb:0.62, drown:0.00, glitch:0.16, kaleido:0.00, bloom:0.14 }, // can't see / self splitting
-    suffocate:{ ripple:0.46, smear:0.30, rgb:0.90, drown:0.10, glitch:0.10, kaleido:0.00, bloom:0.04 }, // can't breathe
-    debris:   { ripple:0.60, smear:0.40, rgb:0.34, drown:0.00, glitch:0.78, kaleido:0.00, bloom:0.10 }, // becomes debris
-    drown:    { ripple:1.10, smear:0.34, rgb:0.10, drown:1.00, glitch:0.00, kaleido:0.00, bloom:0.14 }, // now I'm drowning
-    hollow:   { ripple:0.40, smear:0.16, rgb:0.14, drown:0.14, glitch:0.90, kaleido:0.00, bloom:0.04 }, // no more / only objects
-    echo:     { ripple:0.70, smear:0.30, rgb:0.20, drown:0.26, glitch:0.00, kaleido:0.60, bloom:0.20 }, // remember me — endless loop
-    spotlight:{ ripple:0.50, smear:0.40, rgb:0.00, drown:0.00, glitch:0.00, kaleido:0.00, bloom:0.00 }, // the black act (uDark drives it)
+    //          ripple smear  rgb   drown glitch      (rgb = colour intensity while click-holding)
+    dream:    { ripple:1.00, smear:0.20, rgb:0.20, drown:0.00, glitch:0.00 }, // floating ring lens
+    pieces:   { ripple:0.55, smear:0.85, rgb:0.20, drown:0.00, glitch:0.00 }, // melting memory trail
+    fracture: { ripple:0.55, smear:0.25, rgb:1.10, drown:0.00, glitch:0.10 }, // can't see — colour splits hard on hold
+    suffocate:{ ripple:0.40, smear:0.30, rgb:1.30, drown:0.14, glitch:0.10 }, // can't breathe
+    debris:   { ripple:0.50, smear:0.45, rgb:0.45, drown:0.00, glitch:1.00 }, // becomes debris — glitch patch
+    drown:    { ripple:1.00, smear:0.35, rgb:0.25, drown:1.00, glitch:0.00 }, // now I'm drowning — cold water lens
+    hollow:   { ripple:0.40, smear:0.20, rgb:0.35, drown:0.10, glitch:0.90 }, // no more / only objects
+    spotlight:{ ripple:0.50, smear:0.35, rgb:0.20, drown:0.00, glitch:0.00 }, // black act (uDark drives the lantern)
   };
-  // [time(s), mode] — arrival of each new feeling in the song
+  // [time(s), mode] — which flavour is available at each moment of the song
   const TIMELINE = [
     [0.0,   "dream"],      // intro / "all around — memories of me"
     [28.3,  "pieces"],     // lost & found, the pieces that didn't complete
@@ -257,15 +228,15 @@ import * as THREE from "three";
     [49.0,  "suffocate"],  // not even me / can't breathe
     [59.0,  "debris"],     // memories become debris
     [64.0,  "fracture"],   // are we enemies / will you remember me
-    [74.0,  "echo"],       // the turn — loop starts to fold
+    [74.0,  "dream"],      // the turn — calm before the drop
     [85.0,  "drown"],      // falling down — now I'm drowning — into the sea
     [95.4,  "hollow"],     // no more projects / prospects / only objects
     [103.0, "pieces"],     // reminding me — fading
     [111.0, "suffocate"],  // not even me / can't breathe (reprise)
     [121.2, "debris"],     // memories become debris (reprise, harder)
     [126.0, "fracture"],   // are we enemies (reprise)
-    [131.0, "echo"],       // remember? — the loop
-    [166.4, "spotlight"],  // cut to black — the funeral
+    [131.0, "pieces"],     // remember? — the looping memory
+    [166.4, "spotlight"],  // cut to black — the lantern
   ];
   function modeAt(t) {
     let m = TIMELINE[0][1];
@@ -273,13 +244,7 @@ import * as THREE from "three";
     return m;
   }
   let forcedMode = null;   // debug override
-
-  /* click shockwave */
-  let burstAmp = 0, burstAge = 0;
-  function fireBurst(uvx, uvy) {
-    U.uBurstPos.value.set(uvx, uvy);
-    burstAmp = 1.0; burstAge = 0.0;
-  }
+  let pointerDown = false;  // for the click-and-hold colour effect
 
   function initGL() {
     try {
@@ -351,15 +316,10 @@ import * as THREE from "three";
     lastMove = U.uTime.value; hasPointer = true;
   }
   window.addEventListener("pointermove", function (e) { onMove(e.clientX, e.clientY); });
-  window.addEventListener("pointerdown", function (e) {
-    onMove(e.clientX, e.clientY);
-    // click = a shockwave rippling out from the point you touched (works everywhere, incl. the black act)
-    if (running && glOK) {
-      const r = canvas.getBoundingClientRect();
-      if (r.width && r.height) fireBurst((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
-    }
-  });
-  window.addEventListener("mouseleave", function () { hasPointer = false; });
+  window.addEventListener("pointerdown", function (e) { onMove(e.clientX, e.clientY); pointerDown = true; });
+  window.addEventListener("pointerup", function () { pointerDown = false; });
+  window.addEventListener("pointercancel", function () { pointerDown = false; });
+  window.addEventListener("mouseleave", function () { hasPointer = false; pointerDown = false; });
 
   let prevMouse = new THREE.Vector2(0.5, 0.5);
   let lastCW = 0, lastCH = 0;
@@ -374,41 +334,32 @@ import * as THREE from "three";
     const dt = Math.min(0.05, (now - clock.last) / 1000); clock.last = now;
     U.uTime.value += dt;
 
-    // idle drift: if the pointer's been still a moment, let the ripple centre wander (keeps it alive on touch)
-    if (U.uTime.value - lastMove > 1.6 || !hasPointer) {
-      const t = U.uTime.value;
-      mTarget.set(0.5 + 0.22 * Math.sin(t * 0.23), 0.5 + 0.16 * Math.sin(t * 0.31 + 1.0));
-    }
-    mouse.lerp(mTarget, 0.12);
+    // the cursor follows the real pointer only — no idle drift, so a still pointer = clean video
+    mouse.lerp(mTarget, 0.18);
     U.uMouse.value.copy(mouse);
     const vel = mouse.clone().sub(prevMouse);
     U.uVel.value.lerp(vel, 0.5);
     prevMouse.copy(mouse);
-    U.uPresence.value += ((hasPointer && (U.uTime.value - lastMove < 0.4) ? 1 : 0) - U.uPresence.value) * 0.08;
+
+    // presence = movement activity: quick to rise, gentle to fade → effects only while moving
+    const moving = hasPointer && (U.uTime.value - lastMove < 0.22) ? 1 : 0;
+    U.uPresence.value += (moving - U.uPresence.value) * (moving > U.uPresence.value ? 0.30 : 0.05);
+    // hold = pointer pressed → the colour effect holds
+    const held = pointerDown ? 1 : 0;
+    U.uHold.value += (held - U.uHold.value) * (held ? 0.30 : 0.10);
 
     // smooth dark-act crossfade
     const wantDark = film.currentTime >= BLACK_AT ? 1 : 0;
     U.uDark.value += (wantDark - U.uDark.value) * 0.06;
 
-    // ---- effect timeline: crossfade the knobs toward the active mode ----
+    // ---- effect timeline: crossfade the knobs toward the active mode's flavour ----
     const M = MODES[forcedMode || modeAt(film.currentTime)] || MODES.dream;
     const kf = 1 - Math.exp(-dt * 2.6);   // ~0.4s to arrive, graceful morph
-    U.uRipple.value  += (M.ripple  - U.uRipple.value)  * kf;
-    U.uSmear.value   += (M.smear   - U.uSmear.value)   * kf;
-    U.uRGB.value     += (M.rgb     - U.uRGB.value)     * kf;
-    U.uDrown.value   += (M.drown   - U.uDrown.value)   * kf;
-    U.uGlitch.value  += (M.glitch  - U.uGlitch.value)  * kf;
-    U.uKaleido.value += (M.kaleido - U.uKaleido.value) * kf;
-    U.uBloom.value   += (M.bloom   - U.uBloom.value)   * kf;
-
-    // ---- click shockwave ----
-    if (burstAmp > 0.001) {
-      burstAge += dt;
-      burstAmp *= Math.exp(-dt * 2.4);
-      if (burstAmp < 0.01) burstAmp = 0;
-    }
-    U.uBurst.value = burstAmp;
-    U.uBurstAge.value = burstAge;
+    U.uRipple.value += (M.ripple - U.uRipple.value) * kf;
+    U.uSmear.value  += (M.smear  - U.uSmear.value)  * kf;
+    U.uRGB.value    += (M.rgb    - U.uRGB.value)    * kf;
+    U.uDrown.value  += (M.drown  - U.uDrown.value)  * kf;
+    U.uGlitch.value += (M.glitch - U.uGlitch.value) * kf;
 
     if (film.readyState >= 2) vtex.needsUpdate = true;
     drawFrame();
@@ -483,8 +434,9 @@ import * as THREE from "three";
     startAt: function (t) { if (!running) start(); film.currentTime = t || 0; },
     mode: function (name) { forcedMode = name || null; },   // force / clear an effect mode
     modeAt: modeAt,
-    burst: function (x, y) { fireBurst(x == null ? 0.5 : x, y == null ? 0.5 : y); },
     renderOnce: function () { if (film.readyState >= 2) vtex.needsUpdate = true; drawFrame(); },
+    pause: function () { running = false; },                // halt the rAF loop (verify: hold a state still)
+    resume: function () { if (!running) { running = true; clock.last = performance.now(); requestAnimationFrame(renderGL); } },
     // set knob uniforms directly + draw — for verifying a look in the throttled preview tab
     set: function (o) { for (const k in o) { const u = U["u" + k.charAt(0).toUpperCase() + k.slice(1)]; if (u) u.value = o[k]; } if (film.readyState >= 2) vtex.needsUpdate = true; drawFrame(); },
     get kind() { return curKind; },
