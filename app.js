@@ -148,8 +148,8 @@ import * as THREE from "three";
       float smear = clamp((0.6 + uSmear*1.4) * length(uVel) * 6.0, 0.0, 0.94) * exp(-dist*2.0);
       vec3 col = mix(vid, ghost, smear);
 
-      /* in the black act: stop feeding the video — hold the last living memory */
-      col = mix(col, ghost, uDark);
+      /* NOTE: the video keeps feeding through the black act — the end text is IN the
+         footage; the lantern in the disp pass is what makes it readable. */
       gl_FragColor = vec4(col, 1.0);
     }`;
   const DISP_FRAG = `
@@ -184,18 +184,17 @@ import * as THREE from "three";
         col.g = mix(col.g, col.g*(1.0 - drop*0.6), gm);
       }
 
-      /* THE BLACK ACT — a warm lantern in the dark that the mouse carries.
-         Everything is black except a soft orb around the cursor, where the last
-         living memory glows back in warm sepia. This is the unique mouse effect. */
+      /* THE BLACK ACT — the light went out. The video (and its end text) keeps
+         playing but is swallowed by darkness; only the warm lantern the mouse
+         carries lets you read it. Outside the light: pure black. */
       if(uDark > 0.001){
         vec3 mem0 = col;
-        float pulse = 0.23 + 0.02 * sin(uTime * 1.6);            /* gentle breath */
-        float orb  = smoothstep(pulse, 0.02, dist);              /* the light circle */
+        float pulse = 0.27 + 0.02 * sin(uTime * 1.6);            /* gentle breath */
+        float orb  = smoothstep(pulse, 0.03, dist);              /* the light circle */
         float halo = smoothstep(pulse*1.9, pulse*0.5, dist);     /* faint outer glow */
-        float g = dot(mem0, vec3(0.299, 0.587, 0.114));
-        vec3 sepia = mix(vec3(g), mem0, 0.5) * vec3(1.12, 0.98, 0.80);
-        vec3 lantern = sepia * orb + vec3(0.95, 0.60, 0.28) * halo * 0.12;
-        col = mix(mem0, lantern, uDark);                         /* → pure black outside the orb */
+        vec3 warm = mem0 * vec3(1.10, 0.97, 0.82);               /* candlelit read */
+        vec3 lantern = warm * orb + vec3(0.95, 0.60, 0.28) * halo * 0.10;
+        col = mix(mem0, lantern, uDark);                         /* → black outside the light */
       }
 
       float gr = hash(vUv*vec2(1280.0, 720.0) + uTime);
