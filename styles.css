@@ -69,7 +69,9 @@ body.no-gl .film { opacity: 1; }
   transition: opacity .5s ease;
 }
 .landing.is-gone { opacity: 0; pointer-events: none; }
-.landing__mark { text-align: center; padding: 6vw; }
+/* water ripples emanate from the play button — a hint of the video's water effect */
+.water-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.landing__mark { position: relative; z-index: 1; text-align: center; padding: 6vw; }
 .landing__eyebrow {
   font-family: "Courier Prime", monospace;
   text-transform: uppercase;

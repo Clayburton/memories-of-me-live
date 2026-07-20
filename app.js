@@ -424,6 +424,75 @@ import * as THREE from "three";
     vid();
   })();
 
+  /* ---------- landing water: the play button ripples like the video's water ---------- */
+  (function water() {
+    const cv = document.getElementById("waterCanvas");
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    let W = 0, H = 0, DPRw = 1;
+    const ripples = [];
+    function size() {
+      DPRw = Math.min(window.devicePixelRatio || 1, 2);
+      W = landing.clientWidth || window.innerWidth;
+      H = landing.clientHeight || window.innerHeight;
+      cv.width = Math.max(1, Math.floor(W * DPRw));
+      cv.height = Math.max(1, Math.floor(H * DPRw));
+      cv.style.width = W + "px"; cv.style.height = H + "px";
+      ctx.setTransform(DPRw, 0, 0, DPRw, 0, 0);
+    }
+    function localXY(clientX, clientY) {
+      const lr = landing.getBoundingClientRect();
+      return { x: clientX - lr.left, y: clientY - lr.top };
+    }
+    function btnCenter() {
+      const r = playBtn.getBoundingClientRect(), lr = landing.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - lr.left, y: r.top + r.height / 2 - lr.top };
+    }
+    function drop(x, y, strength) {
+      ripples.push({ x: x, y: y, t: performance.now(), s: strength || 1 });
+      if (ripples.length > 48) ripples.shift();
+    }
+    function drawFrame(now) {
+      ctx.clearRect(0, 0, W, H);
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rp = ripples[i];
+        const age = (now - rp.t) / 1000;
+        const life = 2.6 * rp.s + 1.1;
+        if (age > life) { ripples.splice(i, 1); continue; }
+        const p = age / life;
+        const rad = p * (150 + 130 * rp.s);
+        const a = (1 - p) * 0.5 * rp.s;
+        ctx.lineWidth = 2.4 * (1 - p) + 0.4;                         // outer ring
+        ctx.strokeStyle = "rgba(60,140,200," + a.toFixed(3) + ")";
+        ctx.beginPath(); ctx.arc(rp.x, rp.y, rad, 0, 6.2832); ctx.stroke();
+        ctx.lineWidth = 1.5 * (1 - p) + 0.3;                         // inner ring
+        ctx.strokeStyle = "rgba(120,185,225," + (a * 0.7).toFixed(3) + ")";
+        ctx.beginPath(); ctx.arc(rp.x, rp.y, rad * 0.6, 0, 6.2832); ctx.stroke();
+      }
+    }
+    let lastAmbient = 0, lastMove = 0, lastMx = -1, lastMy = -1;
+    function loop(now) {
+      if (landing.classList.contains("is-gone")) { ctx.clearRect(0, 0, W, H); return; }  // done at showtime
+      if (cv.clientWidth && Math.abs(cv.clientWidth - W) > 1) size();  // self-correct if it sized to 0 at load
+      if (now - lastAmbient > 2100) { lastAmbient = now; const c = btnCenter(); drop(c.x, c.y, 0.7); }
+      drawFrame(now);
+      requestAnimationFrame(loop);
+    }
+    size();
+    window.addEventListener("resize", size);
+    window.__water = { size: size, drop: drop, step: function () { drawFrame(performance.now()); } };  // debug
+    landing.addEventListener("pointermove", function (e) {
+      const q = localXY(e.clientX, e.clientY), now = performance.now();
+      if (lastMx < 0 || Math.hypot(q.x - lastMx, q.y - lastMy) > 46 || now - lastMove > 230) {
+        lastMx = q.x; lastMy = q.y; lastMove = now; drop(q.x, q.y, 0.85);
+      }
+    });
+    landing.addEventListener("pointerdown", function (e) {
+      const q = localXY(e.clientX, e.clientY); drop(q.x, q.y, 1.5);   // a firm splash on press
+    });
+    requestAnimationFrame(loop);
+  })();
+
   /* ---------- flow ---------- */
   function beginPlayback(at, autoplay) {
     stage.classList.add("is-live");
