@@ -457,30 +457,36 @@ import * as THREE from "three";
       for (let i = ripples.length - 1; i >= 0; i--) {
         const rp = ripples[i];
         const age = (now - rp.t) / 1000;
-        const life = 2.6 * rp.s + 1.1;
+        const life = 2.4 * Math.min(rp.s, 2.2) + 1.2;
         if (age > life) { ripples.splice(i, 1); continue; }
         const p = age / life;
-        const rad = p * (150 + 130 * rp.s);
-        const a = (1 - p) * 0.5 * rp.s;
-        ctx.lineWidth = 2.4 * (1 - p) + 0.4;                         // outer ring
-        ctx.strokeStyle = "rgba(60,140,200," + a.toFixed(3) + ")";
+        const rad = p * (210 + 190 * rp.s);                          // reaches much further
+        const a = (1 - p) * (1 - p) * 0.95 * Math.min(1, 0.55 + rp.s * 0.45);   // stronger, holds then fades
+        ctx.lineWidth = 6.0 * (1 - p) + 0.8;                         // outer ring — thick
+        ctx.strokeStyle = "rgba(40,130,205," + a.toFixed(3) + ")";
         ctx.beginPath(); ctx.arc(rp.x, rp.y, rad, 0, 6.2832); ctx.stroke();
-        ctx.lineWidth = 1.5 * (1 - p) + 0.3;                         // inner ring
-        ctx.strokeStyle = "rgba(120,185,225," + (a * 0.7).toFixed(3) + ")";
-        ctx.beginPath(); ctx.arc(rp.x, rp.y, rad * 0.6, 0, 6.2832); ctx.stroke();
+        ctx.lineWidth = 4.0 * (1 - p) + 0.5;                         // mid ring
+        ctx.strokeStyle = "rgba(95,175,230," + (a * 0.85).toFixed(3) + ")";
+        ctx.beginPath(); ctx.arc(rp.x, rp.y, rad * 0.62, 0, 6.2832); ctx.stroke();
+        ctx.lineWidth = 2.6 * (1 - p) + 0.4;                         // inner ring
+        ctx.strokeStyle = "rgba(150,205,240," + (a * 0.7).toFixed(3) + ")";
+        ctx.beginPath(); ctx.arc(rp.x, rp.y, rad * 0.32, 0, 6.2832); ctx.stroke();
       }
     }
     let lastAmbient = 0, lastMove = 0, lastMx = -1, lastMy = -1;
     function loop(now) {
       if (landing.classList.contains("is-gone")) { ctx.clearRect(0, 0, W, H); return; }  // done at showtime
       if (cv.clientWidth && Math.abs(cv.clientWidth - W) > 1) size();  // self-correct if it sized to 0 at load
-      if (now - lastAmbient > 2100) { lastAmbient = now; const c = btnCenter(); drop(c.x, c.y, 0.7); }
+      if (now - lastAmbient > 1700) { lastAmbient = now; const c = btnCenter(); drop(c.x, c.y, 1.3); }
       drawFrame(now);
       requestAnimationFrame(loop);
     }
     size();
     window.addEventListener("resize", size);
-    window.__water = { size: size, drop: drop, step: function () { drawFrame(performance.now()); } };  // debug
+    window.__water = {
+      size: size, drop: drop, step: function () { drawFrame(performance.now()); },
+      splash: function () { const c = btnCenter(); drop(c.x, c.y, 3.6); drop(c.x, c.y, 2.2); }   // the click burst
+    };
     landing.addEventListener("pointermove", function (e) {
       const q = localXY(e.clientX, e.clientY), now = performance.now();
       if (lastMx < 0 || Math.hypot(q.x - lastMx, q.y - lastMy) > 46 || now - lastMove > 230) {
@@ -488,7 +494,7 @@ import * as THREE from "three";
       }
     });
     landing.addEventListener("pointerdown", function (e) {
-      const q = localXY(e.clientX, e.clientY); drop(q.x, q.y, 1.5);   // a firm splash on press
+      const q = localXY(e.clientX, e.clientY); drop(q.x, q.y, 2.6);   // a firm splash on press
     });
     requestAnimationFrame(loop);
   })();
@@ -503,11 +509,18 @@ import * as THREE from "three";
     loadKind(pickKind(), at, autoplay);
     if (glOK) { clock.last = performance.now(); requestAnimationFrame(renderGL); }
   }
+  let starting = false;
   function start() {
-    if (!triReady) return;
-    landing.classList.add("is-gone");
-    setTimeout(function () { landing.hidden = true; }, 500);
-    beginPlayback(0, true);
+    if (!triReady || starting) return;
+    starting = true;
+    // the click bursts the water + an RGB colour glitch on the title/arrow — held ~1s so you see it
+    if (window.__water && window.__water.splash) window.__water.splash();
+    landing.classList.add("is-glitch");
+    setTimeout(function () {
+      landing.classList.add("is-gone");
+      setTimeout(function () { landing.hidden = true; }, 500);
+      beginPlayback(0, true);          // still within transient activation → autoplay-with-sound holds
+    }, 1000);
   }
   playBtn.addEventListener("click", start);
 
