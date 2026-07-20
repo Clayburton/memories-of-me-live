@@ -97,12 +97,18 @@ body.no-gl .film { opacity: 1; }
 .playbtn:hover { transform: scale(1.08); }
 .playbtn:active { transform: scale(0.96); }
 .playbtn:focus-visible { outline: 2px solid #111; outline-offset: 6px; border-radius: 4px; }
-.playbtn.is-loading { opacity: .5; pointer-events: none; }
 .playbtn__tri {
-  width: 0; height: 0; border-style: solid;
-  border-width: clamp(20px, 3.4vw, 38px) 0 clamp(20px, 3.4vw, 38px) clamp(32px, 5.4vw, 58px);
-  border-color: transparent transparent transparent #111;
+  width: clamp(32px, 5.4vw, 58px);
+  height: auto;
+  display: block;
+  overflow: visible;
 }
+.playbtn__tri .tri-o { fill: none; stroke: #111; stroke-width: 2; stroke-linejoin: round; }
+.playbtn__tri .tri-f { fill: #111; }
+/* while it loads the button can't be clicked — the triangle filling in IS the progress bar */
+.playbtn.is-loading { pointer-events: none; cursor: default; }
+.playbtn.is-ready .playbtn__tri { animation: triPop .55s cubic-bezier(.22, 1.61, .36, 1); }
+@keyframes triPop { 0% { transform: scale(1); } 38% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
 /* ---------------- END CARD ---------------- */
 .endcard {

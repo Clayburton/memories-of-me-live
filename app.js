@@ -45,6 +45,11 @@ import * as THREE from "three";
 
   /* ---------- load / swap the right cut ---------- */
   function loadKind(kind, at, autoplay) {
+    if (kind === curKind && film.src) {   // already fetched by the landing preloader — reuse it
+      if (at != null) { try { film.currentTime = at; } catch (e) {} }
+      if (autoplay) { const p = film.play(); if (p && p.catch) p.catch(function () {}); }
+      return;
+    }
     curKind = kind;
     document.body.classList.toggle("is-vert", kind === "tall");
     film.src = SRC[kind];
@@ -376,6 +381,49 @@ import * as THREE from "three";
     const tmp = rtA; rtA = rtB; rtB = tmp;
   }
 
+  /* ---------- the play triangle IS the loading bar ----------
+     A hairline outline appears immediately; real load progress fills it
+     black left-to-right; at 100% it settles with a pop and goes live. */
+  const triRect = document.getElementById("triRect");
+  let triShown = 0, triReal = 0, triTrickle = 0, triReady = false;
+  function triProgress(p) { triReal = Math.max(triReal, Math.min(1, p || 0)); }
+  const triTimer = setInterval(function () {
+    triTrickle = Math.min(triTrickle + 0.004, 0.3);       // always alive, never lies far ahead
+    const t = Math.max(triReal, triTrickle);
+    triShown += (t - triShown) * 0.14;
+    if (triReal >= 1 && triShown > 0.985) triShown = 1;
+    if (triRect) triRect.setAttribute("width", (triShown * 62).toFixed(2));
+    if (triShown >= 1) {
+      clearInterval(triTimer);
+      triReady = true;
+      playBtn.classList.remove("is-loading");
+      playBtn.classList.add("is-ready");
+    }
+  }, 40);
+  window.__tri = triProgress;
+
+  playBtn.classList.add("is-loading");
+  (function () {
+    let fontsP = 0, vidP = 0;
+    function upd() { triProgress(0.2 * fontsP + 0.8 * vidP); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fontsP = 1; upd(); });
+    setTimeout(function () { fontsP = 1; upd(); }, 5000);
+    film.preload = "auto";
+    loadKind(pickKind(), null, false);          // start fetching the right cut immediately
+    function vid() {
+      try {
+        if (film.readyState >= 4) vidP = 1;
+        else if (film.duration && film.buffered.length) vidP = Math.max(vidP, Math.min(1, (film.buffered.end(film.buffered.length - 1) / film.duration) / 0.6));
+      } catch (e) {}
+      upd();
+    }
+    film.addEventListener("progress", vid);
+    film.addEventListener("canplaythrough", function () { vidP = 1; upd(); });
+    const poll = setInterval(function () { vid(); if (vidP >= 1 && fontsP >= 1) clearInterval(poll); }, 300);
+    setTimeout(function () { fontsP = 1; vidP = 1; upd(); }, 15000);    // never strand the button
+    vid();
+  })();
+
   /* ---------- flow ---------- */
   function beginPlayback(at, autoplay) {
     stage.classList.add("is-live");
@@ -387,6 +435,7 @@ import * as THREE from "three";
     if (glOK) { clock.last = performance.now(); requestAnimationFrame(renderGL); }
   }
   function start() {
+    if (!triReady) return;
     landing.classList.add("is-gone");
     setTimeout(function () { landing.hidden = true; }, 500);
     beginPlayback(0, true);
