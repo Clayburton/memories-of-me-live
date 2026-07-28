@@ -320,7 +320,12 @@ import * as THREE from "three";
     lastMove = U.uTime.value; hasPointer = true;
   }
   window.addEventListener("pointermove", function (e) { onMove(e.clientX, e.clientY); });
-  window.addEventListener("pointerdown", function (e) { onMove(e.clientX, e.clientY); pointerDown = true; });
+  window.addEventListener("pointerdown", function (e) {
+    onMove(e.clientX, e.clientY); pointerDown = true;
+    // during the film a finger belongs to the effect — never to a page gesture.
+    // Scoped to `running` so it can never interfere with the landing's play button.
+    if (running && e.cancelable) e.preventDefault();
+  }, { passive: false });
   window.addEventListener("pointerup", function () { pointerDown = false; });
   window.addEventListener("pointercancel", function () { pointerDown = false; });
   window.addEventListener("mouseleave", function () { hasPointer = false; pointerDown = false; });
@@ -448,20 +453,24 @@ import * as THREE from "three";
       const r = playBtn.getBoundingClientRect(), lr = landing.getBoundingClientRect();
       return { x: r.left + r.width / 2 - lr.left, y: r.top + r.height / 2 - lr.top };
     }
+    // Hard cap: a handful at most. 48 concurrent rings turned the landing into a
+    // spirograph of overlapping arcs — that must never be possible again.
+    const MAX_RIPPLES = 6;
     function drop(x, y, strength) {
       ripples.push({ x: x, y: y, t: performance.now(), s: strength || 1 });
-      if (ripples.length > 48) ripples.shift();
+      while (ripples.length > MAX_RIPPLES) ripples.shift();
     }
     function drawFrame(now) {
       ctx.clearRect(0, 0, W, H);
       for (let i = ripples.length - 1; i >= 0; i--) {
         const rp = ripples[i];
         const age = (now - rp.t) / 1000;
-        const life = 2.4 * Math.min(rp.s, 2.2) + 1.2;
+        const s = Math.min(rp.s, 2.2);
+        const life = 1.1 * s + 0.9;                                  // short — they can't stack up
         if (age > life) { ripples.splice(i, 1); continue; }
         const p = age / life;
-        const rad = p * (210 + 190 * rp.s);                          // reaches much further
-        const a = (1 - p) * (1 - p) * 0.95 * Math.min(1, 0.55 + rp.s * 0.45);   // stronger, holds then fades
+        const rad = p * (120 + 70 * s);                              // a pool at the button, not the whole page
+        const a = (1 - p) * (1 - p) * 0.95 * Math.min(1, 0.55 + s * 0.45);      // stronger, holds then fades
         ctx.lineWidth = 6.0 * (1 - p) + 0.8;                         // outer ring — thick
         ctx.strokeStyle = "rgba(40,130,205," + a.toFixed(3) + ")";
         ctx.beginPath(); ctx.arc(rp.x, rp.y, rad, 0, 6.2832); ctx.stroke();
@@ -473,11 +482,13 @@ import * as THREE from "three";
         ctx.beginPath(); ctx.arc(rp.x, rp.y, rad * 0.32, 0, 6.2832); ctx.stroke();
       }
     }
-    let lastAmbient = 0, lastMove = 0, lastMx = -1, lastMy = -1;
+    let lastAmbient = 0;
     function loop(now) {
-      if (landing.classList.contains("is-gone")) { ctx.clearRect(0, 0, W, H); return; }  // done at showtime
+      if (landing.classList.contains("is-gone")) {                 // done at showtime
+        ripples.length = 0; ctx.clearRect(0, 0, W, H); return;
+      }
       if (cv.clientWidth && Math.abs(cv.clientWidth - W) > 1) size();  // self-correct if it sized to 0 at load
-      if (now - lastAmbient > 1700) { lastAmbient = now; const c = btnCenter(); drop(c.x, c.y, 1.3); }
+      if (now - lastAmbient > 1900) { lastAmbient = now; const c = btnCenter(); drop(c.x, c.y, 1.3); }
       drawFrame(now);
       requestAnimationFrame(loop);
     }
@@ -485,16 +496,15 @@ import * as THREE from "three";
     window.addEventListener("resize", size);
     window.__water = {
       size: size, drop: drop, step: function () { drawFrame(performance.now()); },
-      splash: function () { const c = btnCenter(); drop(c.x, c.y, 3.6); drop(c.x, c.y, 2.2); }   // the click burst
+      get count() { return ripples.length; }, max: MAX_RIPPLES,
+      // the click burst: two rings expanding at different rates = a real splash
+      splash: function () { const c = btnCenter(); drop(c.x, c.y, 2.2); drop(c.x, c.y, 1.1); }
     };
-    landing.addEventListener("pointermove", function (e) {
-      const q = localXY(e.clientX, e.clientY), now = performance.now();
-      if (lastMx < 0 || Math.hypot(q.x - lastMx, q.y - lastMy) > 46 || now - lastMove > 230) {
-        lastMx = q.x; lastMy = q.y; lastMove = now; drop(q.x, q.y, 0.85);
-      }
-    });
+    // NO ripples from moving the pointer: one per 46px of travel filled the screen with
+    // overlapping arcs the moment you swept the mouse across the landing. The water now
+    // comes only from the button's own pulse and from an actual press.
     landing.addEventListener("pointerdown", function (e) {
-      const q = localXY(e.clientX, e.clientY); drop(q.x, q.y, 2.6);   // a firm splash on press
+      const q = localXY(e.clientX, e.clientY); drop(q.x, q.y, 2.2);   // a firm splash on press
     });
     requestAnimationFrame(loop);
   })();

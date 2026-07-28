@@ -15,6 +15,16 @@ html, body {
   color: #111;
   font-family: "Courier Prime", "Courier New", Courier, monospace;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;    /* no pull-to-refresh / rubber-band under a drag */
+}
+/* MOBILE: a finger dragging on the water or the film must drive the effect — never
+   scroll the page or shove the video around. touch-action:none is the line that
+   makes the browser hand us the drag instead of treating it as a gesture. */
+.landing, .stage, .fx, .film, .water-canvas {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;  /* no long-press "save image" over the video */
 }
 
 /* ---------------- THE PLAYER ---------------- */
